@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_lavel', function (Blueprint $table) {
+        Schema::create('m_level', function (Blueprint $table) {
             $table->id('level_id');
             $table->string('level_kode', 10)->unique();
             $table->string('level_nama', 100);
@@ -19,11 +19,12 @@ return new class extends Migration
         });
     }
 
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_lavel');
+        Schema::dropIfExists('m_level');
     }
 };
