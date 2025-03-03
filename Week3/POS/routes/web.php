@@ -18,6 +18,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\LevelController;
 
 
 // Route Home
@@ -38,3 +39,6 @@ Route::get('/user/{id}/name/{name}', [UserController::class, 'profile']);
 
 // Route Penjualan
 Route::get('/sales', [SalesController::class, 'index']);
+
+// Route Level
+Route::get('/level', [LevelController::class, 'index']);
