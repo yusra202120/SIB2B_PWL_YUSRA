@@ -48,4 +48,5 @@ Route::get('/level', [LevelController::class, 'index']);
 // Route Kategori
 Route::get('/kategori', [KategoriController::class, 'index']);
 
+// Route User : ketika user membuka /user di browser, laravel akan menjalankan index() diUserController
 Route::get('/user', [UserController::class, 'index']);
