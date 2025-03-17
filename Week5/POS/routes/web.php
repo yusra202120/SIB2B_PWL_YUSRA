@@ -21,6 +21,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\LevelController;
 
+Route::get('/welcome', function () {
+    return view('welcome');
+});
+
+
 
 // Route Home
 Route::get('/', [HomeController::class, 'index']);
