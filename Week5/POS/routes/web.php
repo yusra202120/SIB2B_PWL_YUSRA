@@ -68,3 +68,5 @@ Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
 
 Route::get('/kategori/create', [KategoriController::class, 'create']);
 Route::post('/kategori', [KategoriController::class, 'store']);
+
+Route::resource('kategori', \App\Http\Controllers\KategoriController::class);
