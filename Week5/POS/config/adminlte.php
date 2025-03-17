@@ -392,6 +392,12 @@ return [
             'icon_color' => 'cyan',
             'url' => '#',
         ],
+
+        [
+            'text' => 'Manage Kategori',
+            'url'  => 'kategori',
+            'icon' => 'fas fa-tags',
+        ],
     ],
 
     /*
