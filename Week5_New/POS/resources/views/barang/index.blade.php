@@ -59,7 +59,7 @@
                 { data: 'DT_RowIndex', className: 'text-center', orderable: false, searchable: false },
                 { data: 'barang_kode' },
                 { data: 'barang_nama' },
-                { data: 'kategori.kategori_nama' },
+                { data: 'kategori' },
                 { data: 'harga_beli', className: 'text-right' },
                 { data: 'harga_jual', className: 'text-right' },
                 { data: 'aksi', orderable: false, searchable: false }
