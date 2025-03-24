@@ -20,10 +20,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\WelcomeController;
 
-
-// Route Home
-Route::get('/', [HomeController::class, 'index']);
+// Route Welcome
+Route::get('/', [WelcomeController::class, 'index']);
 
 
 // Route Products dengan Prefix
