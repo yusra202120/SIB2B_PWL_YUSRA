@@ -80,4 +80,18 @@ Route::prefix('barang')->group(function () {
     Route::delete('/{id}', [BarangController::class, 'destroy']);
 });
 
+use App\Http\Controllers\StokController;
+
+    Route::prefix('stok')->group(function () {
+        Route::get('/', [StokController::class, 'index']);
+        Route::get('/list', [StokController::class, 'list']);
+        Route::get('/create', [StokController::class, 'create']);
+        Route::post('/', [StokController::class, 'store']);
+        Route::get('/{id}', [StokController::class, 'show']);
+        Route::get('/{id}/edit', [StokController::class, 'edit']);
+        Route::put('/{id}', [StokController::class, 'update']);
+        Route::delete('/{id}', [StokController::class, 'destroy']);
+    });
+
+
 

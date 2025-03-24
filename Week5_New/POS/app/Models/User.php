@@ -42,4 +42,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function stok()
+{
+    return $this->hasMany(StokModel::class, 'user_id', 'id');
+}
+
 }
