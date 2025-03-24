@@ -46,12 +46,13 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 
-// Route Penjualan
-Route::get('/sales', [SalesController::class, 'index']);
-
-// Route Level
-Route::get('/level', [LevelController::class, 'index']);
-
-
-// Route Kategori
-Route::get('/kategori', [KategoriController::class, 'index']);
+Route::prefix('level')->group(function () {
+    Route::get('/', [LevelController::class, 'index']);
+    Route::get('/list', [LevelController::class, 'list']);
+    Route::get('/create', [LevelController::class, 'create']);
+    Route::post('/', [LevelController::class, 'store']);
+    Route::get('/{id}', [LevelController::class, 'show']);           
+    Route::get('/{id}/edit', [LevelController::class, 'edit']);
+    Route::put('/{id}', [LevelController::class, 'update']);
+    Route::delete('/{id}', [LevelController::class, 'destroy']);
+});
