@@ -22,9 +22,12 @@ class UserController extends Controller
 
         $activeMenu = 'user'; // set menu yang sedang aktif
 
+        $level = LevelModel::all();
+
         return view('user.index', [
             'breadcrumb' => $breadcrumb,
             'page'       => $page,
+            'level'      => $level,
             'activeMenu' => $activeMenu
         ]);
     }
@@ -32,22 +35,24 @@ class UserController extends Controller
     // Ambil data user dalam bentuk json untuk datatables
     public function list(Request $request)
     {
-        $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
-            ->with('level');
-
-        return DataTables::of($users)
-            // Menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
+        $data = UserModel::with('level');
+    
+        if ($request->level_id) {
+            $data->where('level_id', $request->level_id);
+        }
+    
+        return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('aksi', function ($user) {
-                // Menambahkan kolom aksi
-                $btn  = '<a href="' . url('/user/' . $user->user_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                $btn .= '<a href="' . url('/user/' . $user->user_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                $btn .= '<form class="d-inline-block" method="POST" action="' . url('/user/' . $user->user_id) . '">'
-                    . csrf_field() . method_field('DELETE') .
-                    '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-                return $btn;
+            ->addColumn('aksi', function ($row) {
+                return '
+                    <a href="'.url('/user/'.$row->user_id).'" class="btn btn-sm btn-info">Detail</a>
+                    <a href="'.url('/user/'.$row->user_id.'/edit').'" class="btn btn-sm btn-warning">Edit</a>
+                    <form action="'.url('/user/'.$row->user_id).'" method="POST" style="display:inline;">
+                        '.csrf_field().method_field('DELETE').'
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Yakin hapus data ini?\')">Hapus</button>
+                    </form>';
             })
-            ->rawColumns(['aksi']) // Memberitahu bahwa kolom aksi berisi HTML
+            ->rawColumns(['aksi'])
             ->make(true);
     }
 
@@ -172,6 +177,7 @@ class UserController extends Controller
             return redirect('/user')->with('error', 'Data user gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
     }
+
 
 
 
