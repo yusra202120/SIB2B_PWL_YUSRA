@@ -12,17 +12,45 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+    
         @if (session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Filter:</label>
+                    <div class="col-3">
+                        <select class="form-control" id="barang_id" name="barang_id" required>
+                            <option value="">- Semua Barang -</option>
+                            @foreach ($barang as $item)
+                                <option value="{{ $item->barang_id }}">{{ $item->barang_nama }}</option>
+                            @endforeach
+                        </select>
+                        <small class="form-text text-muted">Barang</small>
+                    </div>
+                    <div class="col-3">
+                        <select class="form-control" id="user_id" name="user_id" required>
+                            <option value="">- Semua User -</option>
+                            @foreach ($user as $item)
+                                <option value="{{ $item->user_id }}">{{ $item->user_nama }}</option>
+                            @endforeach
+                        </select>
+                        <small class="form-text text-muted">User</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <table class="table table-bordered table-striped table-hover table-sm" id="table_stok">
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Nama Barang</th>
+                    <th>ID</th>
+                    <th>Barang</th>
+                    <th>User</th>
+                    <th>Tanggal</th>
                     <th>Jumlah</th>
-                    <th>Tanggal Stok</th>
-                    <th>Input Oleh</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -31,24 +59,65 @@
 </div>
 @endsection
 
+@push('css')
+{{-- Tambahkan custom CSS di sini jika diperlukan --}}
+@endpush
+
 @push('js')
 <script>
     $(document).ready(function () {
-        var table = $('#table_stok').DataTable({
-            processing: true,
-            serverSide: true,
+        var dataStok = $('#table_stok').DataTable({
             ajax: {
                 url: "{{ url('stok/list') }}",
-                type: "GET"
+                dataType: "json",
+                type: "GET",
+                data: function (d) {
+                    d.barang_id = $('#barang_id').val();
+                    d.user_id = $('#user_id').val();
+                }
             },
             columns: [
-                { data: "DT_RowIndex", className: "text-center", orderable: false, searchable: false },
-                { data: "nama_barang", orderable: true, searchable: true },
-                { data: "stok_jumlah", className: "text-right", orderable: true, searchable: true },
-                { data: "stok_tanggal", orderable: true, searchable: true },
-                { data: "nama_user", orderable: false, searchable: false },
-                { data: "aksi", className: "text-center", orderable: false, searchable: false }
+                {
+                    data: "DT_RowIndex",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "barang.barang_nama",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "user.nama",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "stok_tanggal",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "stok_jumlah",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "aksi",
+                    className: "",
+                    orderable: false,
+                    searchable: false
+                }
             ]
+        });
+
+        $('#barang_id, #user_id').on('change', function () {
+            dataStok.ajax.reload();
         });
     });
 </script>

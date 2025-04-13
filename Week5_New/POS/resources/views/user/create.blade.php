@@ -12,7 +12,7 @@
             @csrf
 
             <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Level</label>
+                <label for="level_id" class="col-1 control-label col-form-label">Level</label>
                 <div class="col-11">
                     <select class="form-control" id="level_id" name="level_id" required>
                         <option value="">- Pilih Level -</option>
@@ -27,7 +27,7 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Username</label>
+                <label for="username" class="col-1 control-label col-form-label">Username</label>
                 <div class="col-11">
                     <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" required>
                     @error('username')
@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Nama</label>
+                <label for="nama" class="col-1 control-label col-form-label">Nama</label>
                 <div class="col-11">
                     <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama') }}" required>
                     @error('nama')
@@ -47,7 +47,7 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Password</label>
+                <label for="password" class="col-1 control-label col-form-label">Password</label>
                 <div class="col-11">
                     <input type="password" class="form-control" id="password" name="password" required>
                     @error('password')
@@ -57,13 +57,11 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-1 control-label col-form-label"></label>
-                <div class="col-11">
+                <div class="col-11 offset-1">
                     <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                    <a class="btn btn-sm btn-default ml-1" href="{{ url('user') }}">Kembali</a>
+                    <a href="{{ url('user') }}" class="btn btn-sm btn-default ml-1">Kembali</a>
                 </div>
             </div>
-
         </form>
     </div>
 </div>

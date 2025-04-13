@@ -4,71 +4,84 @@
 <div class="card card-outline card-primary">
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
-        <div class="card-tools">
-            <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
-        </div>
+        <div class="card-tools"></div>
     </div>
     <div class="card-body">
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label>Kategori:</label>
-                <select id="filter_kategori" class="form-control">
-                    <option value="">- Semua -</option>
-                    @foreach ($kategori as $item)
-                        <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
-                    @endforeach
-                </select>
+        @empty($user)
+            <div class="alert alert-danger alert-dismissible">
+                <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
+                Data yang Anda cari tidak ditemukan.
             </div>
-        </div>
-        <table class="table table-bordered table-striped table-hover table-sm" id="table_barang">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Kode Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Kategori</th>
-                    <th>Harga Beli</th>
-                    <th>Harga Jual</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-        </table>
+            <a href="{{ url('user') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
+        @else
+            <form method="POST" action="{{ url('/user/'.$user->user_id) }}" class="form-horizontal">
+                @csrf
+                {!! method_field('PUT') !!} <!-- method PUT untuk update data -->
+
+                <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Level</label>
+                    <div class="col-11">
+                        <select class="form-control" id="level_id" name="level_id" required>
+                            <option value="">- Pilih Level -</option>
+                            @foreach($level as $item)
+                                <option value="{{ $item->level_id }}" @if($item->level_id == $user->level_id) selected @endif>
+                                    {{ $item->level_nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('level_id')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Username</label>
+                    <div class="col-11">
+                        <input type="text" class="form-control" id="username" name="username" value="{{ old('username', $user->username) }}" required>
+                        @error('username')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Nama</label>
+                    <div class="col-11">
+                        <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama', $user->nama) }}" required>
+                        @error('nama')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Password</label>
+                    <div class="col-11">
+                        <input type="password" class="form-control" id="password" name="password">
+                        @error('password')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @else
+                            <small class="form-text text-muted">Abaikan jika tidak ingin mengganti password user.</small>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-1 control-label col-form-label"></label>
+                    <div class="col-11">
+                        <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                        <a href="{{ url('user') }}" class="btn btn-sm btn-default ml-1">Kembali</a>
+                    </div>
+                </div>
+            </form>
+        @endempty
     </div>
 </div>
 @endsection
 
-@push('js')
-<script>
-    $(document).ready(function () {
-        var table = $('#table_barang').DataTable({
-            ajax: {
-                url: "{{ url('/barang/list') }}",
-                data: function (d) {
-                    d.kategori_id = $('#filter_kategori').val();
-                }
-            },
-            processing: true,
-            serverSide: true,
-            columns: [
-                { data: 'DT_RowIndex', className: 'text-center', orderable: false, searchable: false },
-                { data: 'barang_kode' },
-                { data: 'barang_nama' },
-                { data: 'kategori.kategori_nama' },
-                { data: 'harga_beli', className: 'text-right' },
-                { data: 'harga_jual', className: 'text-right' },
-                { data: 'aksi', orderable: false, searchable: false }
-            ]
-        });
+@push('css')
+@endpush
 
-        $('#filter_kategori').on('change', function () {
-            table.ajax.reload();
-        });
-    });
-</script>
+@push('js')
 @endpush

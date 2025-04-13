@@ -43,9 +43,5 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function stok()
-{
-    return $this->hasMany(StokModel::class, 'user_id', 'id');
-}
 
 }
