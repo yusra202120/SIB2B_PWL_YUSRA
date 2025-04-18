@@ -22,7 +22,7 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\BarangController;
-
+use Monolog\Level;
 
 // Route Welcome
 Route::get('/', [WelcomeController::class, 'index']);
@@ -61,13 +61,24 @@ Route::group(['prefix' => 'user'], function () {
 
 Route::prefix('level')->group(function () {
     Route::get('/', [LevelController::class, 'index']);
-    Route::get('/list', [LevelController::class, 'list']);
+    Route::post('/list', [LevelController::class, 'list']);
     Route::get('/create', [LevelController::class, 'create']);
     Route::post('/', [LevelController::class, 'store']);
+    
+    Route::get('/create_ajax', [LevelController::class, 'create_ajax']); // Menampilkan halaman form tambah user Ajax
+    Route::post('/ajax', [LevelController::class, 'store_ajax']);        // Menyimpan data user baru Ajax
+    
     Route::get('/{id}', [LevelController::class, 'show']);           
     Route::get('/{id}/edit', [LevelController::class, 'edit']);
     Route::put('/{id}', [LevelController::class, 'update']);
-    Route::delete('/{id}', [LevelController::class, 'destroy']);
+    
+    Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);    // Menampilkan halaman form edit user Ajax
+    Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']); // Menyimpan perubahan data user Ajax
+    Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // Untuk tampilkan form konfirmasi delete user Ajax
+    Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // Untuk hapus data user Ajax
+    
+    Route::delete('/{id}', [LevelController::class, 'destroy']);    
+
 });
 
 Route::prefix('kategori')->group(function () {
