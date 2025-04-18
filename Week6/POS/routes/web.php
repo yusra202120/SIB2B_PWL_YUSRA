@@ -105,14 +105,25 @@ Route::prefix('kategori')->group(function () {
 
 Route::prefix('barang')->group(function () {
     Route::get('/', [BarangController::class, 'index']);
-    Route::get('/list', [BarangController::class, 'list']);
+    Route::post('/list', [BarangController::class, 'list']);
     Route::get('/create', [BarangController::class, 'create']);
     Route::post('/', [BarangController::class, 'store']);
+
+    Route::get('/create_ajax', [BarangController::class, 'create_ajax']); // Menampilkan form tambah barang via Ajax
+    Route::post('/ajax', [BarangController::class, 'store_ajax']);        // Simpan data barang via Ajax
+
     Route::get('/{id}', [BarangController::class, 'show']);
     Route::get('/{id}/edit', [BarangController::class, 'edit']);
     Route::put('/{id}', [BarangController::class, 'update']);
+
+    Route::get('/{id}/edit_ajax', [BarangController::class, 'edit_ajax']);         // Tampilkan form edit barang via Ajax
+    Route::put('/{id}/update_ajax', [BarangController::class, 'update_ajax']);     // Simpan perubahan data barang via Ajax
+    Route::get('/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']);    // Konfirmasi hapus barang via Ajax
+    Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);  // Hapus data barang via Ajax
+
     Route::delete('/{id}', [BarangController::class, 'destroy']);
 });
+
 
 use App\Http\Controllers\StokController;
 
