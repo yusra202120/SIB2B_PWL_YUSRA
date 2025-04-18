@@ -33,22 +33,21 @@ class LevelController extends Controller
     // Ambil data level dalam bentuk json untuk DataTables
     public function list(Request $request)
     {
-        $data = LevelModel::query();
-
-        return DataTables::of($data)
+        $level = LevelModel::select('level_id', 'level_kode', 'level_nama');
+    
+        return DataTables::of($level)
             ->addIndexColumn()
-            ->addColumn('aksi', function ($row) {
-                return '
-                    <a href="' . url('/level/' . $row->level_id) . '" class="btn btn-sm btn-info">Detail</a>
-                    <a href="'.url('/level/'.$row->level_id.'/edit').'" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="'.url('/level/'.$row->level_id).'" method="POST" style="display:inline;">
-                        '.csrf_field().method_field('DELETE').'
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Yakin hapus level ini?\')">Hapus</button>
-                    </form>';
+            ->addColumn('aksi', function ($item) {
+                $btn  = '<button onclick="modalAction(\'' . url('/level/' . $item->level_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/level/' . $item->level_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/level/' . $item->level_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button>';
+    
+                return $btn;
             })
             ->rawColumns(['aksi'])
             ->make(true);
     }
+    
 
 
         public function create()

@@ -5,23 +5,21 @@
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
-            <a href="{{ url('kategori/create') }}" class="btn btn-primary btn-sm">Tambah</a>
+            <a href="{{ url('kategori/create') }}" class="btn btn-sm btn-primary mt-1">Tambah</a>
+            <button onclick="modalAction('{{ url('kategori/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
+
     <div class="card-body">
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ session('success') }}
-                <button class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @elseif(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show">
-                {{ session('error') }}
-                <button class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <table class="table table-bordered table-striped">
+        @if (session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
+        <table class="table table-bordered table-striped table-hover table-sm" id="table_kategori">
             <thead>
                 <tr>
                     <th>No</th>
@@ -30,29 +28,73 @@
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody>
-                @forelse($kategori as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->kategori_kode }}</td>
-                    <td>{{ $item->kategori_nama }}</td>
-                    <td>
-                        <a href="{{ url('kategori/'.$item->kategori_id) }}" class="btn btn-info btn-sm">Detail</a>
-                        <a href="{{ url('kategori/'.$item->kategori_id.'/edit') }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form method="POST" action="{{ url('kategori/'.$item->kategori_id) }}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="4" class="text-center">Data kategori belum tersedia.</td>
-                </tr>
-                @endforelse
-            </tbody>
         </table>
     </div>
 </div>
+
+<div id="myModal" 
+     class="modal fade animate shake" 
+     tabindex="-1" 
+     role="dialog" 
+     data-backdrop="static" 
+     data-keyboard="false" 
+     data-width="75%" 
+     aria-hidden="true">
+</div>
 @endsection
+
+@push('css')
+{{-- Tambahkan custom CSS di sini jika diperlukan --}}
+@endpush
+
+@push('js')
+<script>
+    function modalAction(url = '') {
+        $('#myModal').load(url, function () {
+            $('#myModal').modal('show');
+        });
+    }
+
+    var dataKategori;
+
+    $(document).ready(function () {
+        dataKategori = $('#table_kategori').DataTable({
+            serverSide: true,
+            ajax: {
+                url: "{{ url('kategori/list') }}",
+                dataType: "json",
+                type: "POST",
+                data: function (d) {
+                    d._token = '{{ csrf_token() }}';
+                }
+            },
+            columns: [
+                {
+                    data: "DT_RowIndex",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "kategori_kode",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "kategori_nama",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "aksi",
+                    className: "",
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
+    });
+</script>
+@endpush
