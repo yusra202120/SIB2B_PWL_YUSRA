@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/baby-kid', [ProductController::class, 'babyKid']);
     });
 
+    Route::middleware(['authorize:ADM,MNG'])->group(function () {
     Route::group(['prefix' => 'user'], function () {
         Route::get('/', [UserController::class, 'index']);              // menampilkan halaman awal user
         Route::post('/list', [UserController::class, 'list']);           // menampilkan data user dalam bentuk json untuk datatables
@@ -70,8 +71,10 @@ Route::middleware(['auth'])->group(function () {
         
         Route::delete('/{id}', [UserController::class, 'destroy']);     // menghapus data user
     });
+});
 
 
+    Route::middleware(['authorize:ADM,MNG'])->group(function () {
         Route::prefix('level')->group(function () {
             Route::get('/', [LevelController::class, 'index']);
             Route::post('/list', [LevelController::class, 'list']);
@@ -93,8 +96,9 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [LevelController::class, 'destroy']);    
 
         });
+    });
 
-        Route::middleware(['authorize:ADM'])->group(function () {
+        Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
             Route::prefix('kategori')->group(function () {
                 Route::get('/', [KategoriController::class, 'index']);
                 Route::post('/list', [KategoriController::class, 'list']);
@@ -117,7 +121,7 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
-
+    Route::middleware(['authorize:ADM,MNG,STF,CUS'])->group(function () {
     Route::prefix('barang')->group(function () {
         Route::get('/', [BarangController::class, 'index']);
         Route::post('/list', [BarangController::class, 'list']);
@@ -138,6 +142,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/{id}', [BarangController::class, 'destroy']);
     });
+});
 
 
     Route::group(['prefix' => 'stok'], function () {
