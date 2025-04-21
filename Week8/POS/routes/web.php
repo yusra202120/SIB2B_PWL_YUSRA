@@ -144,6 +144,10 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);  // Hapus data barang via Ajax
 
         Route::delete('/{id}', [BarangController::class, 'destroy']);
+
+        Route::get('/import', [BarangController::class, 'import']); // ajax upload excel
+        Route::post('/import_ajax', [BarangController::class, 'import_ajax']); // ajax import excel
+
     });
 });
 
