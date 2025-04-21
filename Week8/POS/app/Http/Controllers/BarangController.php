@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;  // Make sure you have PhpSpreadsheet installed
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx; // jika mau menyimpan ke Excel
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 
 class BarangController extends Controller
@@ -366,7 +370,7 @@ class BarangController extends Controller
             ->get();
 
         // load library excel
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet(); // ambil sheet yang aktif
 
         $sheet->setCellValue('A1', 'No');
@@ -397,7 +401,7 @@ class BarangController extends Controller
 
         $sheet->setTitle('Data Barang'); // set title sheet
 
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = 'Data Barang '.date('Y-m-d H:i:s').'.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -413,7 +417,22 @@ class BarangController extends Controller
         exit;
     } // end function export_excel
 
+    public function export_pdf()
+{
+    $barang = BarangModel::select('kategori_id','barang_kode','barang_nama','harga_beli','harga_jual')
+                ->orderBy('kategori_id')
+                ->orderBy('barang_kode')
+                ->with('kategori')
+                ->get();
 
+    // use Barryvdh\DomPDF\Facade\Pdf;
+    $pdf = Pdf::loadView('barang.export_pdf', ['barang' => $barang]);
+    $pdf->setPaper('a4', 'portrait'); // set ukuran kertas dan orientasi
+    $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
+    $pdf->render();
+
+    return $pdf->stream('Data Barang '.date('Y-m-d H:i:s').'.pdf');
+}
 
     
 }
