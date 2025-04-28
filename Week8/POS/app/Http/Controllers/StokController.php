@@ -189,30 +189,27 @@ class StokController extends Controller
         }
     }
 
-        public function create_ajax()
+    public function create_ajax()
     {
         $barang = BarangModel::select('barang_id', 'barang_nama')->get();
-        $user = UserModel::select('user_id', 'user_nama')->get();
-
-        return view('stok.create_ajax')
-            ->with('barang', $barang)
-            ->with('user', $user);
+        $user = UserModel::select('user_id', 'nama')->get();
+    
+        return view('stok.create_ajax', compact('barang', 'user'));
     }
-
-
+    
     public function store_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
-
+    
             $rules = [
                 'barang_id'     => 'required|integer',
                 'user_id'       => 'required|integer',
                 'stok_tanggal'  => 'required|date',
                 'stok_jumlah'   => 'required|integer|min:1',
             ];
-
+    
             $validator = Validator::make($request->all(), $rules);
-
+    
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -220,17 +217,18 @@ class StokController extends Controller
                     'msgField' => $validator->errors()
                 ]);
             }
-
+    
             StokModel::create($request->all());
-
+    
             return response()->json([
                 'status' => true,
                 'message' => 'Data stok berhasil disimpan.'
             ]);
         }
-
+    
         return redirect('/');
     }
+    
 
     public function edit_ajax(string $id)
     {

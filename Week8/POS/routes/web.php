@@ -153,7 +153,7 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-
+Route::middleware(['authorize:ADM,MNG,STF,CUS'])->group(function () {
     Route::group(['prefix' => 'stok'], function () {
         Route::get('/', [StokController::class, 'index']);          // menampilkan halaman awal stok
         Route::post('/list', [StokController::class, 'list']);      // menampilkan data stok dalam bentuk json untuk datatables
@@ -178,7 +178,10 @@ Route::middleware(['auth'])->group(function () {
         // artinya semua route di dalam group ini harus login dulu
 
         // masukkan semua route yang perlu autentikasi di sini
-});
+
+    });
+
+    });
 
 
 
